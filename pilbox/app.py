@@ -319,7 +319,7 @@ class ImageHandler(tornado.web.RequestHandler):
         url = self.get_argument("url")
         if not url:
             raise errors.UrlError("Missing url")
-        elif url.startswith("http://") or url.startswith("https://"):
+        elif url.startswith("http://") or url.startswith("https://") or url.startswith("file:"):
             return
         elif self.settings.get("implicit_base_url") and url.startswith("/"):
             return

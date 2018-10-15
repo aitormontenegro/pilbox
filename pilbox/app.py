@@ -318,13 +318,16 @@ class ImageHandler(tornado.web.RequestHandler):
     def _validate_url(self):
         url = self.get_argument("url")
         customfile = self.get_argument("file")
-        if not url and not customfile:
-            raise errors.UrlError("Missing url")
-        elif url.startswith("http://") or url.startswith("https://") or customfile:
+        if customfile:
             return
-        elif self.settings.get("implicit_base_url") and url.startswith("/"):
-            return
-        raise errors.UrlError("Unsupported protocol")
+        elif:
+            if not url and not customfile:
+                raise errors.UrlError("Missing url")
+            elif url.startswith("http://") or url.startswith("https://"):
+                return
+            elif self.settings.get("implicit_base_url") and url.startswith("/"):
+                return
+            raise errors.UrlError("Unsupported protocol")
 
     def _validate_client(self):
         client = self.settings.get("client_name")

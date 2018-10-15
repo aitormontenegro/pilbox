@@ -209,11 +209,12 @@ class ImageHandler(tornado.web.RequestHandler):
                     user_agent=self.settings.get("user_agent"),
                     proxy_host=self.settings.get("proxy_host"),
                     proxy_port=self.settings.get("proxy_port"))
+                print("hola!!")
                 raise tornado.gen.Return(resp)
  #           else:
   #              raise errors.OperationError("File not implemented, yet")
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
-            logger.warn("AAAAFetch error for %s: %s",
+            logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),
                         str(e))
             raise errors.FetchError()

@@ -256,7 +256,7 @@ class ImageHandler(tornado.web.RequestHandler):
 #        if resp.buffer:
 #           print("Aitor - 2 - "+str(resp.buffer))
 
-        if resp.buffer:
+        if resp:
             image = Image(resp.buffer)
             for operation in ops:
                 if operation == "resize":

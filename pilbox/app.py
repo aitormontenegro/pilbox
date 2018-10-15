@@ -250,8 +250,7 @@ class ImageHandler(tornado.web.RequestHandler):
         if customfile:
             print("Aitor - 0 - "+str(customfile))
 
-#        if resp.buffer:
- #           print("Aitor - 2 - "+str(resp.buffer))
+        print("Aitor - 2 - "+str(resp.buffer))
         raise errors.OperationError("Aitor - 3 - File not implemented, yet")
 
         image = Image(resp.buffer)

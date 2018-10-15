@@ -223,12 +223,6 @@ class ImageHandler(tornado.web.RequestHandler):
     def render_image(self, resp):
         outfile, outfile_format = self._process_response(resp)
 
-        customfile = self.get_argument("file")
-        if customfile:
-            print("Aitor - 0 - "+str(customfile))
-        print("Aitor - 1 - "+str(outfile))
-        print("Aitor - 2 - "+str(outfile_format))
-        raise errors.FetchError()
 
         self._set_headers(resp.headers, outfile_format)
         for block in iter(lambda: outfile.read(65536), b""):
@@ -252,9 +246,15 @@ class ImageHandler(tornado.web.RequestHandler):
         if "noop" in ops:
             return (resp.buffer, None)
 
+        customfile = self.get_argument("file")
+        if customfile:
+            print("Aitor - 0 - "+str(customfile))
+        print("Aitor - 1 - "+str(outfile))
+        print("Aitor - 2 - "+str(outfile_format))
+
 #        if resp.buffer:
  #           print("Aitor - 2 - "+str(resp.buffer))
-        raise errors.OperationError("Aitor - File not implemented, yet")
+        raise errors.OperationError("Aitor - 3 - File not implemented, yet")
 
         image = Image(resp.buffer)
         for operation in ops:

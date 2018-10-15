@@ -200,8 +200,7 @@ class ImageHandler(tornado.web.RequestHandler):
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
         try:
-
-                raise errors.OperationError("File not implemented, yet"+url)
+            raise errors.OperationError("File not implemented, yet"+url)
             if url.startswith("http://") or url.startswith("https://"):
                 resp = yield client.fetch(
                     url,

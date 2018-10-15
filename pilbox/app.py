@@ -193,22 +193,29 @@ class ImageHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def fetch_image(self):
         url = self.get_argument("url")
-        if self.settings.get("implicit_base_url") \
-                and urlparse(url).hostname is None:
-            url = urljoin(self.settings.get("implicit_base_url"), url)
+        customfile = self.get_argument("file")
+        if url:
+            if self.settings.get("implicit_base_url") \
+                    and urlparse(url).hostname is None:
+                url = urljoin(self.settings.get("implicit_base_url"), url)
 
-        client = tornado.httpclient.AsyncHTTPClient(
-            max_clients=self.settings.get("max_requests"))
-        try:
-            resp = yield client.fetch(
-                url,
-                request_timeout=self.settings.get("timeout"),
-                ca_certs=self.settings.get("ca_certs"),
-                validate_cert=self.settings.get("validate_cert"),
-                user_agent=self.settings.get("user_agent"),
-                proxy_host=self.settings.get("proxy_host"),
-                proxy_port=self.settings.get("proxy_port"))
-            raise tornado.gen.Return(resp)
+            client = tornado.httpclient.AsyncHTTPClient(
+                max_clients=self.settings.get("max_requests"))
+            try:
+                resp = yield client.fetch(
+                    url,
+                    request_timeout=self.settings.get("timeout"),
+                    ca_certs=self.settings.get("ca_certs"),
+                    validate_cert=self.settings.get("validate_cert"),
+                    user_agent=self.settings.get("user_agent"),
+                    proxy_host=self.settings.get("proxy_host"),
+                    proxy_port=self.settings.get("proxy_port"))
+                raise tornado.gen.Return(resp)
+        else:
+            try:
+                resp = yield client.fetch(customurl)
+                raise tornado.gen.Return(resp)
+
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),

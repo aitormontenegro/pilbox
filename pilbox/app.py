@@ -161,8 +161,8 @@ class ImageHandler(tornado.web.RequestHandler):
         customfile = self.get_argument("file")
         self.validate_request()
         resp = yield self.fetch_image()
-        if not customfile:
-            raise errors.OperationError("File not implemented, yet"+str(resp))
+        if customfile:
+            raise errors.OperationError("File not implemented, yet")
         self.render_image(resp)
 
     def get_argument(self, name, default=None, strip=True):

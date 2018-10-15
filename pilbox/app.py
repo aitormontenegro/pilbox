@@ -193,42 +193,27 @@ class ImageHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def fetch_image(self):
         url = self.get_argument("url")
-        customfile = self.get_argument("file")
-        if url:
-            if self.settings.get("implicit_base_url") \
-                    and urlparse(url).hostname is None:
-                url = urljoin(self.settings.get("implicit_base_url"), url)
+        if self.settings.get("implicit_base_url") \
+                and urlparse(url).hostname is None:
+            url = urljoin(self.settings.get("implicit_base_url"), url)
 
-            client = tornado.httpclient.AsyncHTTPClient(
-                max_clients=self.settings.get("max_requests"))
-            try:
-                resp = yield client.fetch(
-                    url,
-                    request_timeout=self.settings.get("timeout"),
-                    ca_certs=self.settings.get("ca_certs"),
-                    validate_cert=self.settings.get("validate_cert"),
-                    user_agent=self.settings.get("user_agent"),
-                    proxy_host=self.settings.get("proxy_host"),
-                    proxy_port=self.settings.get("proxy_port"))
-                raise tornado.gen.Return(resp)
-
-            except (socket.gaierror, tornado.httpclient.HTTPError) as e:
-                logger.warn("Fetch error for %s: %s",
+        client = tornado.httpclient.AsyncHTTPClient(
+            max_clients=self.settings.get("max_requests"))
+        try:
+            resp = yield client.fetch(
+                url,
+                request_timeout=self.settings.get("timeout"),
+                ca_certs=self.settings.get("ca_certs"),
+                validate_cert=self.settings.get("validate_cert"),
+                user_agent=self.settings.get("user_agent"),
+                proxy_host=self.settings.get("proxy_host"),
+                proxy_port=self.settings.get("proxy_port"))
+            raise tornado.gen.Return(resp)
+        except (socket.gaierror, tornado.httpclient.HTTPError) as e:
+            logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),
                         str(e))
             raise errors.FetchError()
-        else:
-            try:
-                client = tornado.httpclient.AsyncHTTPClient(
-                   max_clients=self.settings.get("max_requests"))
-                resp = yield client.fetch(customfile)
-                raise tornado.gen.Return(resp)
-
-            except (socket.gaierror, tornado.httpclient.HTTPError) as e:
-                logger.warn("Fetch error for %s: %s",
-                        self.get_argument("url"),
-                        str(e))
-                raise errors.FetchError()
 
     def render_image(self, resp):
         outfile, outfile_format = self._process_response(resp)
@@ -332,17 +317,13 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def _validate_url(self):
         url = self.get_argument("url")
-        customfile = self.get_argument("file")
-        if customfile:
+        if not url:
+            raise errors.UrlError("Missing url")
+        elif url.startswith("http://") or url.startswith("https://"):
             return
-        else:
-            if not url and not customfile:
-                raise errors.UrlError("Missing url")
-            elif url.startswith("http://") or url.startswith("https://"):
-                return
-            elif self.settings.get("implicit_base_url") and url.startswith("/"):
-                return
-            raise errors.UrlError("Unsupported protocol")
+        elif self.settings.get("implicit_base_url") and url.startswith("/"):
+            return
+        raise errors.UrlError("Unsupported protocol")
 
     def _validate_client(self):
         client = self.settings.get("client_name")

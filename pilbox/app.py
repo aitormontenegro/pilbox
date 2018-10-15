@@ -200,8 +200,7 @@ class ImageHandler(tornado.web.RequestHandler):
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
         try:
-            raise errors.OperationError("File not implemented, yet"+str(url))
-            if url.startswith("http://") or url.startswith("https://"):
+#            if url.startswith("http://") or url.startswith("https://"):
                 resp = yield client.fetch(
                     url,
                     request_timeout=self.settings.get("timeout"),
@@ -211,8 +210,8 @@ class ImageHandler(tornado.web.RequestHandler):
                     proxy_host=self.settings.get("proxy_host"),
                     proxy_port=self.settings.get("proxy_port"))
                 raise tornado.gen.Return(resp)
-            else:
-                raise errors.OperationError("File not implemented, yet")
+ #           else:
+  #              raise errors.OperationError("File not implemented, yet")
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),

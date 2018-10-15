@@ -214,6 +214,15 @@ class ImageHandler(tornado.web.RequestHandler):
                 print("Aitor --> "+str(resp))
                 raise tornado.gen.Return(resp)
             elif customfile:
+                resp = yield client.fetch(
+                    customfile,
+                    request_timeout=self.settings.get("timeout"),
+                    ca_certs=self.settings.get("ca_certs"),
+                    validate_cert=self.settings.get("validate_cert"),
+                    user_agent=self.settings.get("user_agent"),
+                    proxy_host=self.settings.get("proxy_host"),
+                    proxy_port=self.settings.get("proxy_port"))
+                print("Aitor --> "+str(resp))
                 raise errors.OperationError("File not implemented, yet")
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",

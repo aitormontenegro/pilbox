@@ -228,7 +228,6 @@ class ImageHandler(tornado.web.RequestHandler):
             print("Aitor - 0 - "+str(customfile))
         print("Aitor - 1 - "+str(outfile))
         print("Aitor - 2 - "+str(outfile_format))
-
         raise errors.FetchError()
 
         self._set_headers(resp.headers, outfile_format)
@@ -254,17 +253,17 @@ class ImageHandler(tornado.web.RequestHandler):
             return (resp.buffer, None)
 
 #        if resp.buffer:
-#           print("Aitor - 2 - "+str(resp.buffer))
+ #           print("Aitor - 2 - "+str(resp.buffer))
+        raise errors.OperationError("Aitor - File not implemented, yet")
 
-        if resp:
-            image = Image(resp.buffer)
-            for operation in ops:
-                if operation == "resize":
-                    self._image_resize(image)
-                elif operation == "rotate":
-                    self._image_rotate(image)
-                elif operation == "region":
-                    self._image_region(image)
+        image = Image(resp.buffer)
+        for operation in ops:
+            if operation == "resize":
+                self._image_resize(image)
+            elif operation == "rotate":
+                self._image_rotate(image)
+            elif operation == "region":
+                self._image_region(image)
 
         return (self._image_save(image), image.img.format)
 

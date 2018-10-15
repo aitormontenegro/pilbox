@@ -189,10 +189,10 @@ class ImageHandler(tornado.web.RequestHandler):
             Image.validate_rectangle(self.get_argument("rect"))
 
         Image.validate_options(opts)
-        print("hola!!")
 
     @tornado.gen.coroutine
     def fetch_image(self):
+        print("hola!!")
         url = self.get_argument("url")
         if self.settings.get("implicit_base_url") \
                 and urlparse(url).hostname is None:

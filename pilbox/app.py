@@ -187,9 +187,9 @@ class ImageHandler(tornado.web.RequestHandler):
             opts.update(self._get_rotate_options())
         if "region" in ops:
             Image.validate_rectangle(self.get_argument("rect"))
-        print("hola!!")
 
         Image.validate_options(opts)
+        print("hola!!")
 
     @tornado.gen.coroutine
     def fetch_image(self):

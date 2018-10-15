@@ -202,7 +202,7 @@ class ImageHandler(tornado.web.RequestHandler):
             max_clients=self.settings.get("max_requests"))
         try:
             if url:
-                print("Error despues de esto")
+                print("Aitor - Error despues de esto")
                 resp = yield client.fetch(
                     url,
                     request_timeout=self.settings.get("timeout"),
@@ -211,6 +211,7 @@ class ImageHandler(tornado.web.RequestHandler):
                     user_agent=self.settings.get("user_agent"),
                     proxy_host=self.settings.get("proxy_host"),
                     proxy_port=self.settings.get("proxy_port"))
+                print(str(resp))
                 raise tornado.gen.Return(resp)
             elif customfile:
                 raise errors.OperationError("File not implemented, yet")

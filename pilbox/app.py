@@ -32,6 +32,9 @@ from pilbox import errors
 from pilbox.image import Image
 from pilbox.signature import verify_signature
 
+import PIL.Image
+
+
 try:
     from urlparse import urlparse, urljoin
 except ImportError:

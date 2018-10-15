@@ -200,16 +200,18 @@ class ImageHandler(tornado.web.RequestHandler):
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
         try:
-            resp = yield client.fetch(
-                url,
-                request_timeout=self.settings.get("timeout"),
-                ca_certs=self.settings.get("ca_certs"),
-                validate_cert=self.settings.get("validate_cert"),
-                user_agent=self.settings.get("user_agent"),
-                proxy_host=self.settings.get("proxy_host"),
-                proxy_port=self.settings.get("proxy_port"))
-            print ("--->"+resp)
-            raise tornado.gen.Return(resp)
+            if url.startswith("http://") or url.startswith("https://"):
+                resp = yield client.fetch(
+                    url,
+                    request_timeout=self.settings.get("timeout"),
+                    ca_certs=self.settings.get("ca_certs"),
+                    validate_cert=self.settings.get("validate_cert"),
+                    user_agent=self.settings.get("user_agent"),
+                    proxy_host=self.settings.get("proxy_host"),
+                    proxy_port=self.settings.get("proxy_port"))
+                raise tornado.gen.Return(resp)
+            else:
+                raise errors.OperationError("File not implemented, yet")
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),

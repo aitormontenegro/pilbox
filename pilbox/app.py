@@ -158,7 +158,10 @@ class ImageHandler(tornado.web.RequestHandler):
 
     @tornado.gen.coroutine
     def get(self):
+        customfile = self.get_argument("file")
         self.validate_request()
+        if customfile:
+            raise errors.OperationError("File not implemented, yet")
         resp = yield self.fetch_image()
         self.render_image(resp)
 
@@ -193,7 +196,6 @@ class ImageHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def fetch_image(self):
         url = self.get_argument("url")
-        customfile = self.get_argument("file")
         if self.settings.get("implicit_base_url") \
                 and urlparse(url).hostname is None:
             url = urljoin(self.settings.get("implicit_base_url"), url)
@@ -201,29 +203,15 @@ class ImageHandler(tornado.web.RequestHandler):
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
         try:
-            if url:
-                print("Aitor - Error despues de esto")
-                resp = yield client.fetch(
-                    url,
-                    request_timeout=self.settings.get("timeout"),
-                    ca_certs=self.settings.get("ca_certs"),
-                    validate_cert=self.settings.get("validate_cert"),
-                    user_agent=self.settings.get("user_agent"),
-                    proxy_host=self.settings.get("proxy_host"),
-                    proxy_port=self.settings.get("proxy_port"))
-                print("Aitor --> "+str(resp))
-                raise tornado.gen.Return(resp)
-            elif customfile:
-                resp = yield client.fetch(
-                    customfile,
-                    request_timeout=self.settings.get("timeout"),
-                    ca_certs=self.settings.get("ca_certs"),
-                    validate_cert=self.settings.get("validate_cert"),
-                    user_agent=self.settings.get("user_agent"),
-                    proxy_host=self.settings.get("proxy_host"),
-                    proxy_port=self.settings.get("proxy_port"))
-                print("Aitor --> "+str(resp))
-                raise errors.OperationError("File not implemented, yet")
+            resp = yield client.fetch(
+                url,
+                request_timeout=self.settings.get("timeout"),
+                ca_certs=self.settings.get("ca_certs"),
+                validate_cert=self.settings.get("validate_cert"),
+                user_agent=self.settings.get("user_agent"),
+                proxy_host=self.settings.get("proxy_host"),
+                proxy_port=self.settings.get("proxy_port"))
+            raise tornado.gen.Return(resp)
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),

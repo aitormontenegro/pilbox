@@ -318,8 +318,11 @@ class ImageHandler(tornado.web.RequestHandler):
     def _validate_url(self):
         url = self.get_argument("url")
         if not url:
-            arch = self.get_argument("file")
-            raise errors.UrlError("Missing url ("+arch+")")
+            customfile = self.get_argument("file")
+            if not customfile
+                raise errors.UrlError("Missing url or file ")
+            elif
+                return
         elif url.startswith("http://") or url.startswith("https://"):
             return
         elif self.settings.get("implicit_base_url") and url.startswith("/"):

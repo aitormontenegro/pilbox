@@ -228,10 +228,12 @@ class ImageHandler(tornado.web.RequestHandler):
             print("Aitor - 0 - "+str(customfile))
         print("Aitor - 1 - "+str(outfile))
         print("Aitor - 2 - "+str(outfile_format))
+            raise errors.FetchError()
         self._set_headers(resp.headers, outfile_format)
         for block in iter(lambda: outfile.read(65536), b""):
             self.write(block)
         outfile.close()
+
 
     def write_error(self, status_code, **kwargs):
         err = kwargs["exc_info"][1] if "exc_info" in kwargs else None

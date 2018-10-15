@@ -321,7 +321,7 @@ class ImageHandler(tornado.web.RequestHandler):
             customfile = self.get_argument("file")
             if not customfile:
                 raise errors.UrlError("Missing url or file ")
-            else
+            else:
                 return
         elif url.startswith("http://") or url.startswith("https://"):
             return

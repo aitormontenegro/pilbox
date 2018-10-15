@@ -32,9 +32,6 @@ from pilbox import errors
 from pilbox.image import Image
 from pilbox.signature import verify_signature
 
-import PIL.Image
-
-
 try:
     from urlparse import urlparse, urljoin
 except ImportError:
@@ -161,11 +158,8 @@ class ImageHandler(tornado.web.RequestHandler):
 
     @tornado.gen.coroutine
     def get(self):
-        customfile = self.get_argument("file")
         self.validate_request()
         resp = yield self.fetch_image()
-#        if customfile:
-#            raise errors.OperationError("Aitor - File not implemented, yet")
         self.render_image(resp)
 
     def get_argument(self, name, default=None, strip=True):
@@ -199,7 +193,6 @@ class ImageHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def fetch_image(self):
         url = self.get_argument("url")
-        customfile = self.get_argument("file")
         if self.settings.get("implicit_base_url") \
                 and urlparse(url).hostname is None:
             url = urljoin(self.settings.get("implicit_base_url"), url)
@@ -207,16 +200,15 @@ class ImageHandler(tornado.web.RequestHandler):
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
         try:
-            if not customfile and url:
-                resp = yield client.fetch(
-                    url,
-                    request_timeout=self.settings.get("timeout"),
-                    ca_certs=self.settings.get("ca_certs"),
-                    validate_cert=self.settings.get("validate_cert"),
-                    user_agent=self.settings.get("user_agent"),
-                    proxy_host=self.settings.get("proxy_host"),
-                    proxy_port=self.settings.get("proxy_port"))
-                raise tornado.gen.Return(resp)
+            resp = yield client.fetch(
+                url,
+                request_timeout=self.settings.get("timeout"),
+                ca_certs=self.settings.get("ca_certs"),
+                validate_cert=self.settings.get("validate_cert"),
+                user_agent=self.settings.get("user_agent"),
+                proxy_host=self.settings.get("proxy_host"),
+                proxy_port=self.settings.get("proxy_port"))
+            raise tornado.gen.Return(resp)
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),
@@ -225,13 +217,10 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def render_image(self, resp):
         outfile, outfile_format = self._process_response(resp)
-
-
         self._set_headers(resp.headers, outfile_format)
         for block in iter(lambda: outfile.read(65536), b""):
             self.write(block)
         outfile.close()
-
 
     def write_error(self, status_code, **kwargs):
         err = kwargs["exc_info"][1] if "exc_info" in kwargs else None
@@ -249,19 +238,7 @@ class ImageHandler(tornado.web.RequestHandler):
         if "noop" in ops:
             return (resp.buffer, None)
 
-        customfile = self.get_argument("file")
-        if customfile:
-            print("Aitor - 0 - "+str(customfile))
-            fp = open(str(customfile),"rb")
-            img = PIL.Image.open(fp)
-            print("Aitor - 0 - "+str(img))
-            image = img
-        else:
-            print("Aitor - 2 - "+str(resp.buffer))
-            image = Image(resp.buffer)
-
-#        raise errors.OperationError("Aitor - 3 - File not implemented, yet")
-
+        image = Image(resp.buffer)
         for operation in ops:
             if operation == "resize":
                 self._image_resize(image)
@@ -341,11 +318,7 @@ class ImageHandler(tornado.web.RequestHandler):
     def _validate_url(self):
         url = self.get_argument("url")
         if not url:
-            customfile = self.get_argument("file")
-            if not customfile:
-                raise errors.UrlError("Missing url or file ")
-            else:
-                return
+            raise errors.UrlError("Missing url")
         elif url.startswith("http://") or url.startswith("https://"):
             return
         elif self.settings.get("implicit_base_url") and url.startswith("/"):

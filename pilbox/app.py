@@ -248,7 +248,8 @@ class ImageHandler(tornado.web.RequestHandler):
         ops = self._get_operations()
         if "noop" in ops:
             return (resp.buffer, None)
-        if resp.buffer
+
+        if resp.buffer:
             print("Aitor - 2 - "+str(resp.buffer))
 
         image = Image(resp.buffer)

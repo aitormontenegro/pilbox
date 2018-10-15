@@ -168,10 +168,10 @@ class ImageHandler(tornado.web.RequestHandler):
     def validate_request(self):
         self._validate_operation()
         self._validate_url()
-        print("hola!!")
         self._validate_signature()
         self._validate_client()
         self._validate_host()
+        print("hola!!")
 
         opts = self._get_save_options()
         ops = self._get_operations()

@@ -219,7 +219,9 @@ class ImageHandler(tornado.web.RequestHandler):
             raise errors.FetchError()
         else:
             try:
-                resp = client.fetch( self.get_argument("file"))
+            client = tornado.httpclient.AsyncHTTPClient(
+                max_clients=self.settings.get("max_requests"))
+                resp = yield client.fetch(customfile)
                 raise tornado.gen.Return(resp)
 
             except (socket.gaierror, tornado.httpclient.HTTPError) as e:

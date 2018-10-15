@@ -196,6 +196,7 @@ class ImageHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def fetch_image(self):
         url = self.get_argument("url")
+        customfile = self.get_argument("file")
         if self.settings.get("implicit_base_url") \
                 and urlparse(url).hostname is None:
             url = urljoin(self.settings.get("implicit_base_url"), url)
@@ -203,7 +204,7 @@ class ImageHandler(tornado.web.RequestHandler):
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
         try:
-            if not customfile:
+            if not customfile and url:
                 resp = yield client.fetch(
                     url,
                     request_timeout=self.settings.get("timeout"),

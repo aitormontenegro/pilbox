@@ -171,7 +171,6 @@ class ImageHandler(tornado.web.RequestHandler):
         self._validate_signature()
         self._validate_client()
         self._validate_host()
-        print("hola!!")
 
         opts = self._get_save_options()
         ops = self._get_operations()
@@ -188,6 +187,7 @@ class ImageHandler(tornado.web.RequestHandler):
             opts.update(self._get_rotate_options())
         if "region" in ops:
             Image.validate_rectangle(self.get_argument("rect"))
+        print("hola!!")
 
         Image.validate_options(opts)
 

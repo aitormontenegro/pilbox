@@ -255,10 +255,11 @@ class ImageHandler(tornado.web.RequestHandler):
             fp = open(str(customfile),"rb")
             img = PIL.Image.open(fp)
             print("Aitor - 0 - "+str(img))
+            rest = img
         else:
             print("Aitor - 2 - "+str(resp.buffer))
 
-        raise errors.OperationError("Aitor - 3 - File not implemented, yet")
+#        raise errors.OperationError("Aitor - 3 - File not implemented, yet")
 
         image = Image(resp.buffer)
         for operation in ops:

@@ -201,7 +201,6 @@ class ImageHandler(tornado.web.RequestHandler):
             max_clients=self.settings.get("max_requests"))
         try:
 #            if url.startswith("http://") or url.startswith("https://"):
-                print("hola!!")
                 resp = yield client.fetch(
                     url,
                     request_timeout=self.settings.get("timeout"),
@@ -214,7 +213,7 @@ class ImageHandler(tornado.web.RequestHandler):
  #           else:
   #              raise errors.OperationError("File not implemented, yet")
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
-            logger.warn("Fetch error for %s: %s",
+            logger.warn("AAAAFetch error for %s: %s",
                         self.get_argument("url"),
                         str(e))
             raise errors.FetchError()

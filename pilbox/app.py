@@ -245,7 +245,7 @@ class ImageHandler(tornado.web.RequestHandler):
         if "noop" in ops:
             return (resp.buffer, None)
 
-        print("Aitor"+str(resp.buffer))
+        print("Aitor - 2 - "+str(resp.buffer))
         image = Image(resp.buffer)
         for operation in ops:
             if operation == "resize":

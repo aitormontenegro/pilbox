@@ -222,8 +222,12 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def render_image(self, resp):
         outfile, outfile_format = self._process_response(resp)
-        print("Aitor"+str(outfile))
-        print("Aitor"+str(outfile_format))
+
+        customfile = self.get_argument("file")
+        if customfile:
+            print("Aitor - 0 - "+str(customfile))
+        print("Aitor - 1 - "+str(outfile))
+        print("Aitor - 2 - "+str(outfile_format))
         self._set_headers(resp.headers, outfile_format)
         for block in iter(lambda: outfile.read(65536), b""):
             self.write(block)

@@ -249,8 +249,8 @@ class ImageHandler(tornado.web.RequestHandler):
         customfile = self.get_argument("file")
         if customfile:
             print("Aitor - 0 - "+str(customfile))
-
-#        print("Aitor - 2 - "+str(resp.buffer))
+        else
+            print("Aitor - 2 - "+str(resp.buffer))
 
         raise errors.OperationError("Aitor - 3 - File not implemented, yet")
 

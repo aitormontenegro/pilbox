@@ -222,6 +222,7 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def render_image(self, resp):
         outfile, outfile_format = self._process_response(resp)
+        print(str(outfile))
         self._set_headers(resp.headers, outfile_format)
         for block in iter(lambda: outfile.read(65536), b""):
             self.write(block)

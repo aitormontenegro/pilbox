@@ -222,8 +222,8 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def render_image(self, resp):
         outfile, outfile_format = self._process_response(resp)
-        print(str(outfile))
-        print(str(outfile_format))
+        print("Aitor"+str(outfile))
+        print("Aitor"+str(outfile_format))
         self._set_headers(resp.headers, outfile_format)
         for block in iter(lambda: outfile.read(65536), b""):
             self.write(block)
@@ -245,6 +245,7 @@ class ImageHandler(tornado.web.RequestHandler):
         if "noop" in ops:
             return (resp.buffer, None)
 
+        print("Aitor"+str(resp.buffer))
         image = Image(resp.buffer)
         for operation in ops:
             if operation == "resize":

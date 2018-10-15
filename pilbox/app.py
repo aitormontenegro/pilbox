@@ -249,6 +249,8 @@ class ImageHandler(tornado.web.RequestHandler):
         customfile = self.get_argument("file")
         if customfile:
             print("Aitor - 0 - "+str(customfile))
+            img = Image.open(customfile)
+            print("Aitor - 0 - "+str(img))
         else:
             print("Aitor - 2 - "+str(resp.buffer))
 

@@ -254,16 +254,17 @@ class ImageHandler(tornado.web.RequestHandler):
             return (resp.buffer, None)
 
 #        if resp.buffer:
- #           print("Aitor - 2 - "+str(resp.buffer))
+#           print("Aitor - 2 - "+str(resp.buffer))
 
-        image = Image(resp.buffer)
-        for operation in ops:
-            if operation == "resize":
-                self._image_resize(image)
-            elif operation == "rotate":
-                self._image_rotate(image)
-            elif operation == "region":
-                self._image_region(image)
+        if resp.buffer:
+            image = Image(resp.buffer)
+            for operation in ops:
+                if operation == "resize":
+                    self._image_resize(image)
+                elif operation == "rotate":
+                    self._image_rotate(image)
+                elif operation == "region":
+                    self._image_region(image)
 
         return (self._image_save(image), image.img.format)
 

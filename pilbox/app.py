@@ -317,6 +317,7 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def _validate_url(self):
         url = self.get_argument("url")
+        print(str(url))
         if not url:
             raise errors.UrlError("Missing url")
         elif url.startswith("http://") or url.startswith("https://"):

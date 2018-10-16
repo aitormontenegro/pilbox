@@ -323,6 +323,8 @@ class ImageHandler(tornado.web.RequestHandler):
             return
         elif self.settings.get("implicit_base_url") and url.startswith("/"):
             return
+        elif url.startswith("file:///"):
+            return
         raise errors.UrlError("Unsupported protocol")
 
     def _validate_client(self):

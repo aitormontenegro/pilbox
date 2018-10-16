@@ -159,7 +159,7 @@ class ImageHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def get(self):
         self.validate_request()
-        resp = yield self.fetch_image()
+        mageresp = yield self.fetch_image()
         self.render_image(resp)
 
     def get_argument(self, name, default=None, strip=True):
@@ -322,6 +322,8 @@ class ImageHandler(tornado.web.RequestHandler):
         elif url.startswith("http://") or url.startswith("https://"):
             return
         elif self.settings.get("implicit_base_url") and url.startswith("/"):
+            return
+        elif url.startswith("file:///"):
             return
         raise errors.UrlError("Unsupported protocol")
 

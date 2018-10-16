@@ -160,7 +160,6 @@ class ImageHandler(tornado.web.RequestHandler):
     def get(self):
         self.validate_request()
         resp = yield self.fetch_image()
-        print(str(resp))
         self.render_image(resp)
 
     def get_argument(self, name, default=None, strip=True):
@@ -214,6 +213,7 @@ class ImageHandler(tornado.web.RequestHandler):
             logger.warn("Fetch error for %s: %s",
                         self.get_argument("url"),
                         str(e))
+            logger.warn(str(resp))
             raise errors.FetchError()
 
     def render_image(self, resp):

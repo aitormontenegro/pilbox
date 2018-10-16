@@ -316,8 +316,8 @@ class ImageHandler(tornado.web.RequestHandler):
             raise errors.OperationError("Too many operations")
 
     def _validate_url(self):
+        print(str(self.get_argument("url")))
         url = self.get_argument("url")
-        print(str(url))
         if not url:
             raise errors.UrlError("Missing url")
         elif url.startswith("http://") or url.startswith("https://"):

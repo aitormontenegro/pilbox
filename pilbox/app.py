@@ -192,7 +192,6 @@ class ImageHandler(tornado.web.RequestHandler):
 
     @tornado.gen.coroutine
     def fetch_image(self):
-        print(str(resp))
         url = self.get_argument("url")
         if self.settings.get("implicit_base_url") \
                 and urlparse(url).hostname is None:
@@ -367,4 +366,6 @@ def main(app=None):
 
 
 if __name__ == "__main__":
+    print("hola")
     main()
+

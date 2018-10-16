@@ -160,6 +160,7 @@ class ImageHandler(tornado.web.RequestHandler):
     def get(self):
         self.validate_request()
         resp = yield self.fetch_image()
+        print(str(resp))
         self.render_image(resp)
 
     def get_argument(self, name, default=None, strip=True):

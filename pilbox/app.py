@@ -103,7 +103,7 @@ class FileResp(object):
         self.path = unquote(url).replace('file://','')
         with io.open(self.path, 'r') as fr:
             data = fr.read()
-        self.buffer = data
+        self.buffer = data.encode("utf-8")
 
 
 class PilboxApplication(tornado.web.Application):

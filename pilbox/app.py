@@ -101,9 +101,9 @@ class FileResp(object):
 
     def __init__(self,url):
         self.path = unquote(url).replace('file://','')
-        with io.open(self.path, 'r') as fr:
+        with io.open(self.path, 'rb') as fr:
             data = fr.read()
-        self.buffer = data.encode("utf-8")
+        self.buffer = data
 
 
 class PilboxApplication(tornado.web.Application):

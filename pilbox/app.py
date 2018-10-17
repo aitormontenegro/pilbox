@@ -42,7 +42,7 @@ try:
 except ImportError:
     pycurl = None
 
-from urllib import unquote
+from urllib.unquote
 
 
 # general settings
@@ -99,7 +99,7 @@ logger = logging.getLogger("tornado.application")
 class FileResp(object):
 
     def __init__(self,url):
-        self.path = url.unquote.replace('file://','')
+        self.path = unquote(url).replace('file://','')
         with open(self.path, 'r') as fr:
             data = fr.read()
         self.buffer = data

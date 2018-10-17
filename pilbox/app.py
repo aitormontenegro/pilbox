@@ -42,7 +42,7 @@ try:
 except ImportError:
     pycurl = None
 
-import urllib.unquote
+from urllib import unquote
 
 
 # general settings

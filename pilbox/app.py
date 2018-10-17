@@ -42,6 +42,8 @@ try:
 except ImportError:
     pycurl = None
 
+import urllib.unquote
+
 
 # general settings
 define("config", help="path to configuration file",
@@ -92,6 +94,15 @@ define("retain", help="default adaptive retain percent, 1-99", type=int)
 define("preserve_exif", help="default behavior for exif data", type=int)
 
 logger = logging.getLogger("tornado.application")
+
+
+class FileResp(object):
+
+    def __init__(self,url):
+        self.path = url.unquote.replace('file://','')
+        with open(self.path, 'r') as fr:
+            data = fr.read()
+        self.buffer = data
 
 
 class PilboxApplication(tornado.web.Application):
@@ -199,6 +210,11 @@ class ImageHandler(tornado.web.RequestHandler):
 
         client = tornado.httpclient.AsyncHTTPClient(
             max_clients=self.settings.get("max_requests"))
+
+        if(url.startswith('file://')):
+            resp = FileResp(url)
+            raise tornado.gen.Return(resp)
+
         try:
             resp = yield client.fetch(
                 url,
@@ -208,7 +224,7 @@ class ImageHandler(tornado.web.RequestHandler):
                 user_agent=self.settings.get("user_agent"),
                 proxy_host=self.settings.get("proxy_host"),
                 proxy_port=self.settings.get("proxy_port"))
-            print(str(resp))
+            #print(str(resp))
             raise tornado.gen.Return(resp)
         except (socket.gaierror, tornado.httpclient.HTTPError) as e:
             logger.warn("Fetch error for %s: %s",

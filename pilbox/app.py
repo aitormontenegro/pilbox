@@ -43,6 +43,7 @@ except ImportError:
     pycurl = None
 
 from urllib import unquote
+import io
 
 
 # general settings
@@ -100,7 +101,7 @@ class FileResp(object):
 
     def __init__(self,url):
         self.path = unquote(url).replace('file://','')
-        with open(self.path, 'r') as fr:
+        with io.open(self.path, 'r') as fr:
             data = fr.read()
         self.buffer = data
 
